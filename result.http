@@ -1,0 +1,8 @@
+GET http://127.0.0.1:8000/api/students/
+
+
+POST http://127.0.0.1:8000/api/students/
+
+DELETE http://127.0.0.1.8000/api/students/66fb9031fd66afaeb7c73bf8/
+
+PUT http://127.0.0.1.8000/api/students/66fb9031fd66afaeb7c73bf8/
