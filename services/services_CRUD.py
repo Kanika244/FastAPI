@@ -5,7 +5,6 @@ from bson import ObjectId
 
 
 
-
 async def create_student(student:StudentModel):
     new_student = student.model_dump(exclude=["id"])
     result = await collection.insert_one(new_student)
@@ -14,15 +13,17 @@ async def create_student(student:StudentModel):
 
 
 async def show_student(id: str):
-    if (
-        student := await collection.find_one({"_id": ObjectId(id)})
-    ) is not None:
+        student = await collection.find_one({"_id": ObjectId(id)})
+        
+        if not student:
+            raise HTTPException(status_code=404, detail=f"Student {id} not found")
+
+        student["id"] = str(student["_id"])
+        del student["_id"]
         return StudentModel(**student)
-    raise HTTPException(status_code=404, detail=f"Student {id} not found")
+   
 
-
-
-
+    
 async def delete_student(id:str):
     
     delete_result = await collection.delete_one({"_id": ObjectId(id)})
