@@ -1,8 +1,8 @@
 from bson.errors import InvalidId
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from starlette.responses import JSONResponse
 
-from models import StudentModel, User
+from models import StudentModel
 from database import collection
 from bson import ObjectId
 
@@ -51,10 +51,7 @@ async def delete_student(id: str) -> JSONResponse:
 async def update_student(id: str, student: StudentModel):
     if isinstance(student, dict):
         student = StudentModel(**student)
-    updated_item = {
-        key: getattr(student, key)
-        for key in student.__annotations__ if key != "id"
-    }
+    updated_item = student.model_dump(exclude=["id"])
     result = await collection.update_one(
         {"_id": ObjectId(id)},
         {"$set": updated_item}
